@@ -13,11 +13,11 @@ password_element.send_keys("Lovephonetime8*")
 password_element.submit()
 
 # Navigate to the search page and search for "COPD groups"
-driver.get("https://www.facebook.com/groups/copdinformationandsupport")
+driver.get("https://www.facebook.com/groups/copdinformationandsupport/members")
 
 # Scroll down to load more groups
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
+delay(5)
 # Find all of the group elements
 groups = driver.find_elements_by_css_selector("._32mo")
 
@@ -27,33 +27,33 @@ with open("copd_groups.csv", "w", newline="") as csvfile:
     writer.writerow(["Name", "Profile URL", "Age", "Sex", "Location"])
 
     # Iterate over the groups
-    for group in groups:
+    #for group in groups:
         # Click on the group to go to its page
-        group.click()
+        #group.click()
 
         # Find all of the members in the group
-        members = driver.find_elements_by_css_selector("._2uju ._60rg")
+    members = driver.find_elements_by_css_selector("._2uju ._60rg")
 
-        # Iterate over the members
-        for member in members:
-            # Extract the member's name, profile URL, age, sex, and location
-            name = member.find_element_by_css_selector("._60ri").text
-            profile_url = member.find_element_by_css_selector("._60ri").get_attribute("href")
-            try:
-                age_sex_location = member.find_element_by_css_selector("._60rj").text
-                age = age_sex_location.split(",")[0]
-                sex = age_sex_location.split(",")[1]
-                location = age_sex_location.split(",")[2]
-            except:
-                age = "N/A"
-                sex = "N/A"
-                location = "N/A"
-            
-            # Write the member's information to the CSV file
-            writer.writerow([name, profile_url, age, sex, location])
+    # Iterate over the members
+    for member in members:
+        # Extract the member's name, profile URL, age, sex, and location
+        name = member.find_element_by_css_selector("._60ri").text
+        profile_url = member.find_element_by_css_selector("._60ri").get_attribute("href")
+        try:
+            age_sex_location = member.find_element_by_css_selector("._60rj").text
+            age = age_sex_location.split(",")[0]
+            sex = age_sex_location.split(",")[1]
+            location = age_sex_location.split(",")[2]
+        except:
+            age = "N/A"
+            sex = "N/A"
+            location = "N/A"
         
-        # Go back to the search results page
-        driver.execute_script("window.history.go(-1)")
+        # Write the member's information to the CSV file
+        writer.writerow([name, profile_url, age, sex, location])
+    
+    # Go back to the search results page
+    driver.execute_script("window.history.go(-1)")
 
 # Close the webdriver
 driver.close()
